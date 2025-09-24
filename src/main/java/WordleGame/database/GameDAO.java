@@ -88,6 +88,26 @@ public class GameDAO {
         return 0;
     }
 
+
+    /**
+     * Updates the outcome of a game session.
+     * @param gameId The ID of the game to update.
+     * @param isWin true if the player won, false otherwise.
+     */
+    public void updateGameStatus(int gameId, boolean isWin) {
+        String sql = "UPDATE games SET is_win = ? WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, isWin ? 1 : 0);
+            pstmt.setInt(2, gameId);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error updating game status: " + e.getMessage());
+        }
+    }
+
     /**
      * Retrieves the daily report for the admin.
      * @param date The date for which to retrieve the report (format 'YYYY-MM-DD').

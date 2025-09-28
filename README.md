@@ -74,7 +74,7 @@ The core game challenges players to guess a randomly selected five-letter word i
 1. **Clone the Repository**
 
    ```bash
-   git clone [Your GitHub Repository URL]
+   git clone https://github.com/shubhamMukherjee2304/WordleGui
    cd WordleGui
    ```
 

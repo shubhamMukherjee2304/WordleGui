@@ -16,6 +16,7 @@ public class UserDAO {
      */
     public boolean createUser(User user) {
         String sql = "INSERT INTO users(username, password_hash, user_type) VALUES(?, ?, ?)";
+        System.out.println("db op sus");
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 

@@ -1,9 +1,9 @@
 package WordleGame.gui;
 
 import WordleGame.Main;
-import WordleGame.database.GameDAO;
 import WordleGame.model.Game;
 import WordleGame.model.User;
+import WordleGame.database.GameDAO;
 import WordleGame.service.GameService;
 import WordleGame.service.GuessResult;
 import javafx.fxml.FXML;
@@ -33,6 +33,12 @@ public class GameController {
     @FXML
     private Button submitButton;
 
+    // NOTE: For this to work, you must add a Button to your FXML with:
+    // fx:id="startGameButton" and onAction="#handleStartNewGame"
+    // @FXML
+    // private Button startGameButton;
+
+
     private final GameService gameService = new GameService();
     private final GameDAO gameDao = new GameDAO();
     private Game currentGame;
@@ -45,11 +51,15 @@ public class GameController {
         User user = Main.getLoggedInUser();
         if (user != null) {
             welcomeLabel.setText("Welcome, " + user.getUsername() + "!");
-            startGame(user);
         } else {
             statusLabel.setText("User not logged in.");
         }
         setupGrid();
+
+        // BUG FIX: Initially disable game interaction elements
+        guessInput.setDisable(true);
+        submitButton.setDisable(true);
+        statusLabel.setText("Ready to play? Click 'Start New Game' to begin.");
     }
 
     private void setupGrid() {
@@ -76,11 +86,34 @@ public class GameController {
         }
     }
 
+    /**
+     * Handles the action of starting a new game, linked to a button in the FXML.
+     */
+    @FXML
+    protected void handleStartNewGame() {
+        User user = Main.getLoggedInUser();
+        if (user == null) {
+            showAlert("Error", "User session expired. Please re-login.");
+            handleLogout();
+            return;
+        }
+
+        // Reset game state and UI
+        currentGuessNumber = 1;
+        setupGrid();
+        guessInput.clear();
+
+        // Attempt to start the game
+        startGame(user);
+    }
+
+
     private void startGame(User user) {
         if (gameDao.getGamesPlayedToday(user.getId()) >= 3) {
             statusLabel.setText("You have reached your daily limit of 3 games. Please try again tomorrow.");
             submitButton.setDisable(true);
             guessInput.setDisable(true);
+            // startGameButton.setDisable(true); // If you add the button field
             showAlert("Game Limit Reached", "You have reached your daily limit of 3 games.");
             return;
         }
@@ -91,12 +124,22 @@ public class GameController {
             submitButton.setDisable(true);
             guessInput.setDisable(true);
         } else {
+            // Success: Enable interaction elements
+            guessInput.setDisable(false);
+            submitButton.setDisable(false);
+            guessInput.requestFocus();
             statusLabel.setText("Game started! Guess the 5-letter word.");
         }
     }
 
     @FXML
     protected void handleSubmitGuess() {
+        // Guard clause to ensure game is running
+        if (currentGame == null || submitButton.isDisable()) {
+            showAlert("Game Not Ready", "Please start a new game first.");
+            return;
+        }
+
         String guessWord = guessInput.getText().toUpperCase();
 
         if (guessWord.length() != WORD_LENGTH) {
@@ -111,13 +154,11 @@ public class GameController {
         if (isWin) {
             statusLabel.setText("Congratulations! You've guessed the word!");
             gameService.endGame(currentGame.getId(), true);
-            endGame();
-            showAlert("You Win!", "Congratulations! You've guessed the word!");
+            endGame("You Win!", "Congratulations! You've guessed the word!");
         } else if (currentGuessNumber >= MAX_GUESSES) {
             statusLabel.setText("Better luck next time! The word was: " + currentGame.getTargetWord());
             gameService.endGame(currentGame.getId(), false);
-            endGame();
-            showAlert("Game Over", "Better luck next time! The word was: " + currentGame.getTargetWord());
+            endGame("Game Over", "Better luck next time! The word was: " + currentGame.getTargetWord());
         } else {
             statusLabel.setText("Incorrect guess. Try again! (" + (MAX_GUESSES - currentGuessNumber) + " guesses left)");
             currentGuessNumber++;
@@ -150,9 +191,11 @@ public class GameController {
         }
     }
 
-    private void endGame() {
+    private void endGame(String title, String message) {
         submitButton.setDisable(true);
         guessInput.setDisable(true);
+        // startGameButton.setDisable(false); // If you add the button field
+        showAlert(title, message);
     }
 
     @FXML

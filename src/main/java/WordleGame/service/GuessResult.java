@@ -1,6 +1,6 @@
 package WordleGame.service;
 
-import javafx.scene.paint.Color;
+//import javafx.scene.paint.Color;
 
 public class GuessResult {
 

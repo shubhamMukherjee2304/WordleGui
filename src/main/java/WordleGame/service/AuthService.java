@@ -52,6 +52,7 @@ public class AuthService {
      * @return true if registration is successful, false otherwise.
      */
     public boolean registerUser(String username, String password, String userType) {
+        System.out.println("reg fun op sus");
         if (!isValidUsername(username)) {
             return false;
         }
@@ -62,8 +63,10 @@ public class AuthService {
             return false;
         }
 
+
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         User newUser = new User(username, hashedPassword, userType);
+        System.out.println("nu op sus");
         return userDAO.createUser(newUser);
     }
 

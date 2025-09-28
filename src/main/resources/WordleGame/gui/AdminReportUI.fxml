@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WordleGame.gui.AdminController">
+    <children>
+        <Label style="-fx-text-fill: #ffffff;" text="Admin Dashboard">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+        <VBox alignment="TOP_CENTER" spacing="10.0" style="-fx-padding: 15; -fx-background-color: #1a1a1a; -fx-border-radius: 10; -fx-background-radius: 10;">
+            <children>
+                <Label style="-fx-text-fill: #ffffff; -fx-font-weight: bold;" text="Daily Report" />
+                <HBox alignment="CENTER" spacing="10.0">
+                    <children>
+                        <Label style="-fx-text-fill: #ffffff;" text="Select Date:" />
+                        <DatePicker fx:id="datePicker" />
+                        <Button mnemonicParsing="false" onAction="#handleDailyReport" style="-fx-background-color: #4a90e2; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 5;" text="View Report" />
+                    </children>
+                </HBox>
+                <Label fx:id="dailyReportLabel" style="-fx-text-fill: #ffffff; -fx-font-size: 14;" />
+            </children>
+        </VBox>
+        <VBox alignment="TOP_CENTER" spacing="10.0" style="-fx-padding: 15; -fx-background-color: #1a1a1a; -fx-border-radius: 10; -fx-background-radius: 10;">
+            <children>
+                <Label style="-fx-text-fill: #ffffff; -fx-font-weight: bold;" text="User Report" />
+                <HBox alignment="CENTER" spacing="10.0">
+                    <children>
+                        <Label style="-fx-text-fill: #ffffff;" text="Enter User ID:" />
+                        <TextField fx:id="userIdInput" />
+                        <Button mnemonicParsing="false" onAction="#handleUserReport" style="-fx-background-color: #4a90e2; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 5;" text="View Report" />
+                    </children>
+                </HBox>
+                <TableView fx:id="userReportTable" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                        <TableColumn fx:id="targetWordColumn" prefWidth="75.0" text="Target Word" />
+                        <TableColumn fx:id="gameDateColumn" prefWidth="75.0" text="Date" />
+                        <TableColumn fx:id="isWinColumn" prefWidth="75.0" text="Win?" />
+                        <TableColumn fx:id="numGuessesColumn" prefWidth="75.0" text="Guesses" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+        <Button mnemonicParsing="false" onAction="#handleLogout" style="-fx-background-color: #e24a4a; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 5;" text="Logout" />
+    </children>
+    <padding>
+        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+    </padding>
+</VBox>

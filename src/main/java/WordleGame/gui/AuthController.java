@@ -43,9 +43,9 @@ public class AuthController {
 
             // Switch to the appropriate view based on user type
             if ("PLAYER".equals(user.getUserType())) {
-                Main.switchScene("game_scene.fxml");
+                Main.switchScene("GameSceneUI.fxml");
             } else if ("ADMIN".equals(user.getUserType())) {
-                Main.switchScene("admin_report.fxml");
+                Main.switchScene("AdminReportUI.fxml");
             }
         } else {
             showAlert("Login Failed", "Invalid username or password, or daily game limit reached.");
@@ -57,6 +57,7 @@ public class AuthController {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
+        // 1. Validate username and password against rules
         if (!authService.isValidUsername(username)) {
             showAlert("Registration Failed", "Username must be at least 5 letters (a-z, A-Z).");
             return;
@@ -66,17 +67,19 @@ public class AuthController {
             return;
         }
 
-        // For simplicity, we'll ask the user if they are an admin or player
+        // 2. Ask user to select their role (Admin or Player)
         Optional<ButtonType> result = showRoleSelectionAlert();
-        if (result.isPresent() && result.get() == ButtonType.YES) {
-            if (authService.registerUser(username, password, "ADMIN")) {
-                showAlert("Registration Successful", "Admin user created successfully! You can now log in.");
-            } else {
-                showAlert("Registration Failed", "Username is already taken or an error occurred.");
+
+        if (result.isPresent()) {
+            String userType = "PLAYER"; // Default to PLAYER
+            if (result.get().getText().equals("YES")) {
+                userType = "ADMIN";
             }
-        } else if (result.isPresent() && result.get() == ButtonType.NO) {
-            if (authService.registerUser(username, password, "PLAYER")) {
-                showAlert("Registration Successful", "Player user created successfully! You can now log in.");
+
+            // 3. Attempt to register the user with the selected role
+            boolean newUser = authService.registerUser(username, password, userType);
+            if (newUser) {
+                showAlert("Registration Successful", "User '" + username + "' created successfully! You can now log in.");
             } else {
                 showAlert("Registration Failed", "Username is already taken or an error occurred.");
             }
@@ -97,8 +100,8 @@ public class AuthController {
         alert.setHeaderText("Do you want to register as an ADMIN?");
         alert.setContentText("Choose 'Yes' for Admin or 'No' for Player.");
 
-        ButtonType yesButton = new ButtonType("Yes");
-        ButtonType noButton = new ButtonType("No");
+        ButtonType yesButton = new ButtonType("YES");
+        ButtonType noButton = new ButtonType("NO");
 
         alert.getButtonTypes().setAll(yesButton, noButton);
 

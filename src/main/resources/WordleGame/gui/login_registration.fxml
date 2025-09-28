@@ -14,7 +14,7 @@
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
     </padding>
     <children>
-        <Label text="Word Guess Game" textFill="#333333">
+        <Label text="Welcome to WobblyWordle" textFill="#333333">
             <font>
                 <Font name="System Bold" size="24.0" />
             </font>

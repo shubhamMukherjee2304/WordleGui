@@ -93,9 +93,10 @@ The core game challenges players to guess a randomly selected five-letter word i
 
 ---
 
-## 5. Running the Application
-
-*  **From Terminal**: mvn javafx:run
+## 5. Running the Application (from Terminal)
+```bash
+mvn javafx:run
+```
 
 ---
 

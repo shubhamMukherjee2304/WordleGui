@@ -88,14 +88,14 @@ The core game challenges players to guess a randomly selected five-letter word i
 
    ```bash
    mvn clean install
+   
    ```
 
 ---
 
 ## 5. Running the Application
 
-*  **From IDE**: Run `WordleGame.Main`
-*  **From JAR**: Execute the packaged JAR file
+*  **From Terminal**: mvn javafx:run
 
 ---
 
